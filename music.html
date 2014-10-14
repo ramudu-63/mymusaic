@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Musaic</title>
+<link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" type="text/css" href="bootstrap/css//floating-share.css" />
+<link href="http://fonts.googleapis.com/css?family=Open+Sans&amp;subset=latin,latin-ext" rel="stylesheet" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> 
+<style>
+#circle
+{
+border-radius:50% 50% 50% 50%;  
+width:40px;
+line-height:40px;
+height:40px;
+color:white;
+padding-left:10px;
+font-size:20px;
+background-color:#FF9500;
+border:2px solid ;
+}
+#circle1
+{
+border-radius:50% 50% 50% 50%;  
+width:40px;
+height:40px;
+color:white;
+font-size:20px;
+}
+</style>
+
+<script type="text/javascript">
+			
+			var pathname = window.location.search.substring(1);
+			//alert(pathname);
+			
+			var id = pathname.split('&');
+			
+			var vId = id[0].split('=');
+			var sName = id[1].split('=');
+			
+			var videoId = vId[1];
+			var songName = sName[1];
+			//alert(videoId);
+			//alert(songName);
+			
+			
+			
+			function urlEncode(obj) {
+				var s = '';
+				for (var key in obj) {
+					s += encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]) + '&';
+				}
+				if (s.length > 0) {
+					s = s.substr(0, s.length - 1);
+				}
+
+				return (s);
+			}
+			
+			function performSearch() {
+				var params = {
+					term: encodeURIComponent(songName),
+					country: 'US',
+					media: 'music',
+					entity: 'musicTrack',
+					//attribute: 'artistTerm,albumTerm,songTerm,musicTrackTerm',
+					limit: 1,
+					callback: 'handleTunesSearchResults'
+				};
+				var params = urlEncode(params);
+				//alert(params);
+				var url = 'http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/wa/wsSearch?' + params;
+				var html = '<script src="' + url + '"><//script>';
+				jQuery('head').append(html);
+			}
+			
+			function handleTunesSearchResults(arg) {
+				var results = arg.results;
+				var html = '';
+					//html += "<h3 style='margin-left: 30%;'>My Musaic</h3><br>";
+					//html += "<img src='C:/Users/PGR Vision/Desktop/social-buttons-share/image/Music icon.png' style='width:15%; margin-top:-3%; margin-left:30%; margin-bottom:10%;'/>";
+					//html += "<h3 style='font-family: arial; margin-left:0%; color:skyblue;'>Music :</h3>";
+					
+					if(results.length == 0)
+					{
+						html +="<p style='color:red;'>song details are not available</p>";
+					}
+				else{
+				for (var i = 0; i < results.length; i++) {
+					var item = results[i];
+					var obj = {
+						source: 0,
+						track_id: item.trackId,
+						track_name: item.trackCensoredName,
+						track_time_millis: item.trackTimeMillis,
+						track_url: item.trackViewUrl,
+						track_duration:item.trackDuration,
+						artist_name: item.artistName,
+						artist_url: item.artistViewUrl,
+						collection_name: item.collectionCensoredName,
+						collection_url: item.collectionViewUrl,
+						genre: item.primaryGenreName
+					};
+					results[i] = obj;
+
+					//html += '<div class="songs-search-result">';
+					
+				
+					html += '<br><span class="label" style="font-size:14px;margin:0 -3%;color:#00000">Album Title :</span><a style="color:black" href="{0}" target="_blank">{1}</a><br />'.replace("{0}", obj.collection_url).replace("{1}", obj.collection_name);
+					html += '<span class="label" style="margin:0 -3%;font-size:14px">Music Track Long Name :<br/></span>{0}&nbsp;&nbsp;'.replace("{0}", obj.track_name);
+					html += '<br/><br/><span class="label" style="margin:5% -3%;font-size:12px">Track Duration : &nbsp<i class="glyphicon glyphicon-time"></i></span>&nbsp{0}&nbsp;&nbsp;m/s'.replace("{0}", obj.track_time_millis);
+					//html += '<span class="label">Track Duration:</span>{0} {1}<br />'.replace("{0}", item.trackDuration).replace("{1}", item.minutes);
+					//html += '<a href="{0}" target="_blank">Preview</a>&nbsp;&nbsp;'.replace("{0}", item.previewUrl);
+					//html += '<a href="{0}" target="_blank">Full Song</a>&nbsp;&nbsp;'.replace("{0}", obj.track_url);
+					//html += '<span class="label">Track Price:</span>{0} {1}<br />'.replace("{0}", item.trackPrice).replace("{1}", item.currency);
+					//html += '<br><br><span class="label">Artist:</span><a href="{0}" target="_blank">{1}</a><br />'.replace("{0}", obj.artist_url).replace("{1}", obj.artist_name);
+					
+					//html += '<span class="label">Collection Price:</span>{0} {1}<br />'.replace("{0}", item.collectionPrice).replace("{1}", item.currency);
+					//html += '<br><span class="label">Primary Genre:</span>{0}<br />'.replace("{0}", obj.genre);
+
+					//html += '</div>';
+				}
+				}
+				jQuery('#itunes-results').html(html);
+				performVideo();
+			};
+			function performVideo()
+			{
+				
+				//alert("hi");
+				//var videoId = $('#search-video').val();
+				//alert(videoId);
+				
+				var url="http://view.vzaar.com/"+videoId+"/video";
+				//alert(url);
+					
+				var video = "<div class='vzaar_media_player'><object data='https://view.vzaar.com/"+videoId+"/flashplayer' height='452' id='vzvd-"+videoId+"' type='application/x-shockwave-flash' width='100%'><param name='flashvars' value='border=none' /><param name='allowScriptAccess' value='always' /><param name='wmode' value='transparent' /><param name='movie' value='https://view.vzaar.com/"+videoId+"/flashplayer' /><param name='allowFullScreen' value='true' /><video controls height='452' id='vzvid' onclick='this.play();' poster='https://view.vzaar.com/"+videoId+"/image' preload='none'src='https://view.vzaar.com/"+videoId+"/video' width='75%'></video></object></div>";
+				//alert(video);
+				$("#vid").append(video);
+
+			//var request = new XMLHttpRequest();
+				//request.onreadystatechange = function() {
+				//if (request.readyState === 4) {
+//					if (request.status === 200) {
+//						document.body.className = 'ok';
+	//				} else {	
+		//			document.body.className = 'error';
+			//		}
+				//}
+			//};
+//	request.open("GET", url , true);
+	//request.send(null);
+				
+				
+			}
+		</script>
+</head>
+<body style="margin-top:1%" onload="performSearch()">
+	
+	<div class="container" style="border:1px solid;border-radius:5px;border-color:#E4E4E4;background-color:#F0F2F3">
+		<div class="col-md-1 col-lg-1 col-sm-11 col-xs-11" style="margin-top:15%;padding-left:4%;color:#FE9C1D">
+		Share<br/>
+		
+		
+		</div>
+	
+		<div class="col-md-8 col-lg-8 col-sm-6 col-xs-11" style="margin:3% 20px 5% 20px;border:1px solid;border-radius:5px;background-color:#BEC1C6;border-color:#E4E4E4">
+			<div class="row" style="background-color:#CDCED2" >
+				<div class="col-md-8" >
+					<i class="glyphicon glyphicon-align-justify" style="color:white;padding:3%"></i>
+				</div>
+				<div class="col-md-2" style="color:white;padding:2% 15% 0 0;">
+				Welcome,&nbspViktor
+				</div>
+				<div class="col-md-2" >
+					<img style="margin:7px" src="http://static.wixstatic.com/media/cc94db_efb1f5ed71cf44f0927170e1c274c8ad.png_srz_p_60_60_75_22_0.50_1.20_0.00_png_srz" id="circle1">
+				</div>
+			</div>
+			<p style="color:white;padding:2%">My Perfect mymusaic Video Name</p><br/>
+			<div id="vid" style="margin:-30px 10px 10px 10px;border-radius:5px;border-color:#E4E4E4"></div>
+		</div>
+		
+		<div class="col-md-2 col-lg-2 col-sm-5 col-xs-1"style="padding 0 2%;">
+			<div class="row">
+				<img style="margin: 30% 40%;" src="http://static.wixstatic.com/media/cc94db_efb1f5ed71cf44f0927170e1c274c8ad.png_srz_p_60_60_75_22_0.50_1.20_0.00_png_srz"/>
+				<p style="text-align:center;font-size: 20px;margin-top: -25%;margin-right:-15%"> mymusaic</p>
+			</div>
+			
+			
+			<div class="row" style="padding: 0 10%;background-color:white;margin-top:40%;margin-right:-40%">
+				<p style="margin:15% -3%;color:#9ADA44;font-size:18px"><i class="fa fa-music" ></i>&nbsp Music :</p><br/>
+				<div id="songdetails"></div>
+		<div id="itunes-results" style="margin:-27% -2%">
+		</div><br/>
+				<!-- <p style="font-size:10px">Track Duration : &nbsp <i class="glyphicon glyphicon-time"></i>&nbsp 15.00 Seconds</p><br/> -->
+				<p style="border:1px solid;background-color:#9ADA44;color:white;margin:25% -3%;border-radius:5px;width:80%;font-size:14px">
+				<i class="fa fa-music" style="border-radius:50% 50% 50% 50%;border:2px solid;background-color:#9ADA44;color:white;width:25px;height:25px;"></i>
+				&nbspBuy on iTunes</p>
+			</div>
+			
+		</div >
+		<div class="col-md-12 " style="margin-top:-4%;color:#FE9C1D;padding:0 30%">
+			Click here to download my musaic iOS for free&nbsp &nbsp <a style="color:#FE9C1D;border:none" href="https://itunes.apple.com/us/app/mymusaic/id655602502"><img style="width:25%" src="http://openlanguage.com/img/mobile/standard-icon-iOS-app-store.png"/></a>
+		</div>
+	</div>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/jquery.floating-share.js"></script>
+    <script>
+    $(function(){
+		$("body").floatingShare({
+			place: "top-left", // alternatively top-right
+            counter: true, // set to false to hide counters of pinterest, facebook, twitter and linkedin
+            buttons: ["facebook","twitter","google-plus","linkedin","pinterest","stumbleupon","envelope"], // all of the currently avalaible social buttons
+            //title: document.title, // your title, default is current page's title
+            url: "http://ramudu-63.github.io/mymusaic/music.html",  // your url, default is current page's url
+            text: "share with ", // the title of a tags
+            description: $("meta[name='description']").attr("content"), // your description, default is current page's description
+            popup_width: 400, // the sharer popup's width, default is 400px
+            popup_height: 300 // the sharer popup's width, default is 300px
+		});
+	});
+    </script>
+	<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

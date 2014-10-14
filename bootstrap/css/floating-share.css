@@ -1,0 +1,89 @@
+/*!
+ * Floating Share Plugin CSS v1.0.0
+ * http://www.burakozdemir.co.uk
+ * Copyright 2014 Burak Ã–zdemir - <mail@burakozdemir.co.uk>
+ * Released under the MIT license
+ */
+
+*{
+	box-sizing: border-box;
+}
+
+#floatingShare{
+    position: relative;
+    text-align: center;
+}
+
+#floatingShare a{
+    position: relative;
+    width:42px;
+    height: 42px;
+	border-radius:50% 50% 50% 50%;
+    display:list-item;
+    list-style-type: none;
+	color:#428bca;
+}
+
+#floatingShare a, a:focus, a:hover {
+    color: #fff;
+}
+#floatingShare a, a:visited, a:focus, a:active, a:hover {
+    outline: 0 none !important;
+}
+
+/* icon sizes */
+#floatingShare i{
+    line-height: inherit;
+    font-size: 24px;
+	width:40px;
+	height:40px;
+	border-radius:50% 50% 50% 50%;
+	line-height:40px;
+    text-align: center;
+}
+
+#floatingShare .top-left{
+    position: fixed;
+    top: 40%;
+    left:11%;
+}
+
+#floatingShare .top-right{
+    position: fixed;
+    top: 20%;
+    right:0;
+}
+
+/* facebook */
+
+#floatingShare .feysbuk{
+    background-color: #FF9500;
+	margin-bottom:60%;
+}
+
+/* twitter */
+
+#floatingShare .tivitir{
+    background-color:#FF9500;
+	margin-bottom:60%;
+}
+
+/* google plus */
+
+#floatingShare .gogil{
+    background-color: #FF9500;
+	margin-bottom:60%;
+}
+
+/* instagram */
+
+#floatingShare .insta{
+    background-color: #FF9500;
+	margin-bottom:60%;
+}
+
+
+
+.mtop5{
+    margin-top: 5px;
+}
